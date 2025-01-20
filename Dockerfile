@@ -1,4 +1,4 @@
-FROM alpine:3.18
+FROM alpine:3.20
 ENTRYPOINT ["/sbin/tini","--","/usr/local/searxng/dockerfiles/docker-entrypoint.sh"]
 EXPOSE 8080
 VOLUME /etc/searxng
@@ -35,7 +35,6 @@ RUN apk add --no-cache -t build-dependencies \
     git \
  && apk add --no-cache \
     ca-certificates \
-    su-exec \
     python3 \
     py3-pip \
     libxml2 \
@@ -45,7 +44,7 @@ RUN apk add --no-cache -t build-dependencies \
     uwsgi \
     uwsgi-python3 \
     brotli \
- && pip3 install --no-cache -r requirements.txt \
+ && pip3 install --break-system-packages --no-cache -r requirements.txt \
  && apk del build-dependencies \
  && rm -rf /root/.cache
 
