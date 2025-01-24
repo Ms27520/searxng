@@ -7,13 +7,14 @@
   }
 
   searxng.ready(function () {
-    d.querySelectorAll('#urls img.image').forEach(
+    d.querySelectorAll('#urls img').forEach(
       img =>
         img.addEventListener(
           'error', () => {
-            img.style.display = 'none';
-            img.error = null;
-          }
+            // console.log("ERROR can't load: " + img.src);
+            img.src = window.searxng.settings.theme_static_path + "/img/img_load_error.svg";
+          },
+          {once: true}
         ));
 
     if (d.querySelector('#search_url button#copy_url')) {
@@ -51,6 +52,7 @@
       this.innerText = this.dataset.copiedText;
     });
 
+    const isMobile = screen.orientation.type.startsWith('portrait');
     searxng.selectImage = function (resultElement) {
       /* eslint no-unused-vars: 0 */
       if (resultElement) {
@@ -81,25 +83,48 @@
         }
       }
       d.getElementById('results').classList.add('image-detail-open');
-      searxng.scrollPageToSelected();
-    }
 
-    searxng.closeDetail = function (e) {
-      d.getElementById('results').classList.remove('image-detail-open');
+      // add a hash to the browser history so that pressing back doesn't return to the previous page
+      // this allows us to dismiss the image details on pressing the back button on mobile devices
+      window.location.hash = '#image-viewer';
+
       searxng.scrollPageToSelected();
-    }
+    };
+
+    searxng.closeDetail = function () {
+      d.getElementById('results').classList.remove('image-detail-open');
+      // remove #image-viewer hash from url by navigating back
+      if (window.location.hash == '#image-viewer') window.history.back();
+      searxng.scrollPageToSelected();
+    };
     searxng.on('.result-detail-close', 'click', e => {
       e.preventDefault();
       searxng.closeDetail();
     });
     searxng.on('.result-detail-previous', 'click', e => {
       e.preventDefault();
-      searxng.selectPrevious(false)
+      searxng.selectPrevious(false);
     });
     searxng.on('.result-detail-next', 'click', e => {
       e.preventDefault();
       searxng.selectNext(false);
     });
+
+    // listen for the back button to be pressed and dismiss the image details when called
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash != '#image-viewer') searxng.closeDetail();
+    });
+
+    d.querySelectorAll('.swipe-horizontal').forEach(
+      obj => {
+        obj.addEventListener('swiped-left', function (e) {
+          searxng.selectNext(false);
+        });
+        obj.addEventListener('swiped-right', function (e) {
+          searxng.selectPrevious(false);
+        });
+      }
+    );
 
     w.addEventListener('scroll', function () {
       var e = d.getElementById('backToTop'),
