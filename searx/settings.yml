@@ -34,7 +34,7 @@ search:
   # Filter results. 0: None, 1: Moderate, 2: Strict
   safe_search: 0
   # Existing autocomplete backends: "360search", "baidu", "brave", "dbpedia", "duckduckgo", "google", "yandex",
-  # "mwmbl", "naver", "seznam", "sogou", "stract", "swisscows", "quark", "qwant", "wikipedia" -
+  # "mwmbl", "naver", "seznam", "sogou", "startpage", "stract", "swisscows", "quark", "qwant", "wikipedia" -
   # leave blank to turn it off by default.
   autocomplete: ""
   # minimun characters to type before autocompleter starts
@@ -245,7 +245,7 @@ plugins:
     active: false
 
   searx.plugins.tracker_url_remover.SXNGPlugin:
-    active: false
+    active: true
 
 
 # Configuration of the "Hostnames plugin":
@@ -2036,6 +2036,16 @@ engines:
     enable_http: true
     shortcut: tch
 
+  # TubeArchivist is a self-hosted Youtube archivist software.
+  # https://docs.searxng.org/dev/engines/online/tubearchivist.html
+  #
+  # - name: tubearchivist
+  #   engine: tubearchivist
+  #   shortcut: tuba
+  #   base_url:
+  #   ta_token:
+  #   ta_link_to_mp4: false
+
   # torznab engine lets you query any torznab compatible indexer.  Using this
   # engine in combination with Jackett opens the possibility to query a lot of
   # public and private indexers directly from SearXNG. More details at:
@@ -2771,7 +2781,6 @@ engines:
 doi_resolvers:
   oadoi.org: 'https://oadoi.org/'
   doi.org: 'https://doi.org/'
-  doai.io: 'https://dissem.in/'
   sci-hub.se: 'https://sci-hub.se/'
   sci-hub.st: 'https://sci-hub.st/'
   sci-hub.ru: 'https://sci-hub.ru/'
